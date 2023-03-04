@@ -1,10 +1,28 @@
-<!doctype html>
-<html> 
- <head></head> 
- <body> 
-  <h1> Hello </h1> 
-  <div> 
-   <pre style="font-size:4em">        # Data Extraction from web 
+library(ggplot2)
+library(maptools)
+library(rgeos)
+library(ggmap)
+library(scales)
+library(RColorBrewer)
+library(readxl)
+shp<- readShapeSpatial(admin2.shp)
+plot(shp)
+names(shp)
+print(shp$ST_NM)
+pop<-read_excel()
+head(pop)
+library(ggplot2)
+shp.f <- fortify(shp,region = "ST_NM")
+merge.shp.coef<-merge(shp.f,pop, by="id",all.x=TRUE)
+final.plot<-merge.shp.coef[order(merge.shp.coef$order),]
+library(mapproj)
+ggplot()+geom_polygon(data=final.plot,aes(x=long,y=lat, group=group, fill=count),color="black",size= 0.25)+coord_map()
+ggsave("india_poverty.png",dpi = 300,width = 20,height = 20,units = "cm")
+                                                         
+                                                         
+__________________________________________________________________________________
+
+
 library(rvest)
 library(dplyr)
 online_data &lt;- "https://prsindia.org/budgets/states/karnataka-budget-analysis-2022-23#:~:text=sources%3A%20Karnataka%20Budget%20Document%202022%2D23%3B%20PRS.,-Expenditure%20in%202022&amp;text=Revenue%20expenditure%20in%202022%2D23,pensions%2C%20interest%2C%20and%20subsidies."

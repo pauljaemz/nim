@@ -1,3 +1,10 @@
+
+TATASTEEL.NS <- read.csv("C:/Users/bipin/Downloads/TATASTEEL.NS.csv", stringsAsFactors=TRUE) str(TATASTEEL.NS) names(TATASTEEL.NS) library(ggplot2) ggplot(TATASTEEL.NS, aes(x=Date, y=Close))+geom_line() TATASTEEL.NS$Date<-as.Date(TATASTEEL.NS$Date) str(TATASTEEL.NS) ggplot(TATASTEEL.NS, aes(x=Date, y=Close))+geom_line() #keep only date and Close library(dplyr) TATASTEEL.NS<-TATASTEEL.NS %>% select(1, 5) head((TATASTEEL.NS)) TATASTEEL.NS<- rename(TATASTEEL.NS, Tata_close = Close) JSWSTEEL.NS <- read.csv("C:/Users/bipin/Downloads/JSWSTEEL.NS.csv") JSWSTEEL.NS$Date<-as.Date(JSWSTEEL.NS$Date) ggplot(JSWSTEEL.NS, aes(x=Date, y=Close))+geom_line(color="maroon") JSWSTEEL.NS<-JSWSTEEL.NS[ , c("Date", "Close")] head(JSWSTEEL.NS) JSWSTEEL.NS<- rename(JSWSTEEL.NS, JSW_close = Close) head(JSWSTEEL.NS) #Merge Price_Stock<- merge(TATASTEEL.NS, JSWSTEEL.NS, by = c("Date")) head(Price_Stock) is.na(Price_Stock) which(is.na(Price_Stock)) #Clean names library(janitor) Price_Stock<-clean_names(Price_Stock,case="snake") names(Price_Stock) #Create returns series Price_Stock$tata_ret <- (Price_Stock$tata_close/lag(Price_Stock$tata_close)-1) * 100 Price_Stock$jsw_ret <- (Price_Stock$jsw_close/lag(Price_Stock$jsw_close)-1) * 100 #plot ggplot(Price_Stock)+geom_line(aes(x=Date, y=tata_ret), color="maroon")+ geom_line(aes(x=Date, y=jsw_ret), color="darkblue")+ ggtitle("Stock Returns- JSW Steel & Tata Steel")+ xlab("Date")+ ylab("Returns") #order data- ascending newdata <- Price_Stock[order(Price_Stock$tata_ret),] head(newdata) #decending newdata <- Price_Stock[order(-Price_Stock$tata_ret),] #or newdata <- Price_Stock[order(Price_Stock$tata_ret,decreasing=TRUE),] head(newdata) #sort according to dates newdata <- Price_Stock[order(Price_Stock$Date),]
+
+
+_________________________
+
+
 library(ggplot2)
 library(maptools)
 library(rgeos)
